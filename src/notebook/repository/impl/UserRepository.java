@@ -51,16 +51,35 @@ public class UserRepository implements GBRepository<User, Long> {
 
     @Override
     public Optional<User> findById(Long id) {
+
         return Optional.empty();
     }
 
     @Override
-    public Optional<User> update(Long id, User user) {
-        return Optional.empty();
+    public Optional<User> update(Long id, User update) {
+        try {
+            List<User> users = findAll();
+            User updateUser = users.stream().filter(u -> u.getId().equals(id)).findFirst().get();
+            updateUser.setFirstName(update.getFirstName());
+            updateUser.setLastName(update.getLastName());
+            updateUser.setPhone(update.getPhone());
+            List<String> list = new ArrayList<>();
+            for(User user: users) {
+                list.add(mapper.toInput(user));
+            }
+            operation.saveAll(list);
+            return Optional.of(updateUser);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public boolean delete(Long id) {
         return false;
+    }
+
+    public UserMapper getMapper() {
+        return mapper;
     }
 }
