@@ -1,9 +1,8 @@
 package notebook.controller;
 
 import notebook.model.User;
-import notebook.repository.GBRepository;
+import notebook.model.repository.GBRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,12 +34,12 @@ public class UserController {
         return repository.findAll();
     }
 
-    public boolean userUpdate(long id, User update) {
-        try {
-            repository.update(id, update);
-            return true;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public void updateUser(String userId, User update) {
+        update.setId(Long.parseLong(userId));
+        repository.update(Long.parseLong(userId), update);
+    }
+
+    public void deteleUser(String userId) {
+        repository.delete(Long.parseLong(userId));
     }
 }

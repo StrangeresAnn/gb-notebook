@@ -1,6 +1,6 @@
-package notebook.mapper.impl;
+package notebook.util.mapper.impl;
 
-import notebook.mapper.Mapper;
+import notebook.util.mapper.Mapper;
 import notebook.model.User;
 
 public class UserMapper implements Mapper<User, String> {

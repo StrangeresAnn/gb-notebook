@@ -4,7 +4,6 @@ import notebook.controller.UserController;
 import notebook.model.User;
 import notebook.util.Commands;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +11,7 @@ public class UserView {
     private final UserController userController;
 
     public UserView(UserController userController) {
+
         this.userController = userController;
     }
 
@@ -46,12 +46,12 @@ public class UserView {
                     }
                     break;
                 case UPDATE:
-                    long userId = Long.parseLong(prompt("Input id users: "));
-                    String updateName = prompt("Имя: ");
-                    String updateLastName = prompt("Фамилия: ");
-                    String updatePhone = prompt("Номер телефона: ");
-                    User updatedUser = new User(updateName, updateLastName, updatePhone);
-                    userController.userUpdate(userId,updatedUser);
+                    String userId = prompt("Enter user id: ");
+                    userController.updateUser(userId, createUser());
+                    break;
+                case DELETE:
+                    userId = prompt("Enter user id: ");
+                    userController.deteleUser(userId);
                     break;
             }
         }
@@ -61,5 +61,12 @@ public class UserView {
         Scanner in = new Scanner(System.in);
         System.out.print(message);
         return in.nextLine();
+    }
+
+    private User createUser() {
+        String firstName = prompt("Имя: ");
+        String lastName = prompt("Фамилия: ");
+        String phone = prompt("Номер телефона: ");
+        return new User(firstName, lastName, phone);
     }
 }

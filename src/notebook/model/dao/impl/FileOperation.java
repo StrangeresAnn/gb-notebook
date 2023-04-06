@@ -1,6 +1,6 @@
-package notebook.dao.impl;
+package notebook.model.dao.impl;
 
-import notebook.dao.Operation;
+import notebook.model.dao.Operation;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ public class FileOperation implements Operation<String> {
     @Override
     public List<String> readAll() {
         List<String> lines = new ArrayList<>();
+        File file = new File(fileName);
         try {
-            File file = new File(fileName);
             //создаем объект FileReader для объекта File
             FileReader fr = new FileReader(file);
             //создаем BufferedReader с существующего FileReader для построчного считывания

@@ -1,4 +1,4 @@
-package notebook.repository;
+package notebook.model.repository;
 
 import java.util.List;
 import java.util.Optional;

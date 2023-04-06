@@ -1,9 +1,9 @@
-package notebook.repository.impl;
+package notebook.model.repository.impl;
 
-import notebook.dao.impl.FileOperation;
-import notebook.mapper.impl.UserMapper;
 import notebook.model.User;
-import notebook.repository.GBRepository;
+import notebook.model.dao.impl.FileOperation;
+import notebook.model.repository.GBRepository;
+import notebook.util.mapper.impl.UserMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +56,10 @@ public class UserRepository implements GBRepository<User, Long> {
     }
 
     @Override
-    public Optional<User> update(Long id, User update) {
+    public Optional<User> update(Long userId, User update) {
         try {
             List<User> users = findAll();
-            User updateUser = users.stream().filter(u -> u.getId().equals(id)).findFirst().get();
+            User updateUser = users.stream().filter(u -> u.getId().equals(userId)).findFirst().get();
             updateUser.setFirstName(update.getFirstName());
             updateUser.setLastName(update.getLastName());
             updateUser.setPhone(update.getPhone());
@@ -76,10 +76,20 @@ public class UserRepository implements GBRepository<User, Long> {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        long idForDelete = findAll()
+                .stream()
+                .filter(user -> user.getId() == id)
+                .findFirst()
+                .get().getId();
+
+        List<String> list = new ArrayList<>();
+        for (User user : findAll()) {
+            if (user.getId().equals(idForDelete)) continue;
+            list.add(mapper.toInput(user));
+        }
+        operation.saveAll(list);
+        System.out.println(idForDelete);
+        return true;
     }
 
-    public UserMapper getMapper() {
-        return mapper;
-    }
 }

@@ -1,4 +1,4 @@
-package notebook.dao;
+package notebook.model.dao;
 
 import java.util.List;
 
