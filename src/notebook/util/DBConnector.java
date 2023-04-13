@@ -4,6 +4,10 @@ import java.io.File;
 
 public class DBConnector {
     public static final String DB_PATH = "db.txt";
+
+    /**
+     * Метод создания файла
+     */
     public static void createDB() {
         try {
             File db = new File(DB_PATH);

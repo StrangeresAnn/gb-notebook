@@ -11,17 +11,15 @@ public class UserView {
     private final UserController userController;
 
     public UserView(UserController userController) {
-
         this.userController = userController;
     }
 
     public void run(){
         Commands com;
-
-        while (true) {
-            String command = prompt("Введите команду: ");
-            com = Commands.valueOf(command);
-            if (com == Commands.EXIT) return;
+        while (true) { // Цикл
+            String command = prompt("Введите команду: "); // Инициализация и присваивание для переменной команды пользователя
+            com = Commands.valueOf(command); // Присваивание значения для переменной , метод преобразует String в Long объект
+            if (com == Commands.EXIT) return; // Условие для выхода . Return не должен быть false???????
             switch (com) {
                 case CREATE:
                     String firstName = prompt("Имя: ");
@@ -46,24 +44,35 @@ public class UserView {
                     }
                     break;
                 case UPDATE:
-                    String userId = prompt("Enter user id: ");
-                    userController.updateUser(userId, createUser());
+                    long userId = Long.parseLong(prompt("Введите id пользователя: "));
+                    String updateName = prompt("Имя: ");
+                    String updateLastName = prompt("Фамилия: ");
+                    String updatePhone = prompt("Номер телефона: ");
+                    User updatedUser = new User(updateName, updateLastName, updatePhone);
+                    userController.updateUser(userId, updatedUser);
                     break;
                 case DELETE:
-                    userId = prompt("Enter user id: ");
+                    userId = Long.parseLong(prompt("Enter user id: "));
                     userController.deteleUser(userId);
                     break;
             }
         }
     }
 
-    private String prompt(String message) {
+    /**
+     * Метод принимающий текст через терминал и возвращающий этот текст.
+     * @param message Сообщение для вывода.
+     */
+    private String prompt(String message) { //
         Scanner in = new Scanner(System.in);
         System.out.print(message);
         return in.nextLine();
     }
 
-    private User createUser() {
+    /**
+     * Возвращает новый экземлпяр класса User.
+     */
+    private User createUser() { //
         String firstName = prompt("Имя: ");
         String lastName = prompt("Фамилия: ");
         String phone = prompt("Номер телефона: ");

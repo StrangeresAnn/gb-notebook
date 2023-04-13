@@ -3,12 +3,23 @@ package notebook.util.mapper.impl;
 import notebook.util.mapper.Mapper;
 import notebook.model.User;
 
+
 public class UserMapper implements Mapper<User, String> {
+    /**
+     *
+      * @param user экземпл€р класса
+     * @return ‘орматированную строку с пол€ми экземпл€ра класса.
+     */
     @Override
     public String toInput(User user) {
         return String.format("%s,%s,%s,%s", user.getId(), user.getFirstName(), user.getLastName(), user.getPhone());
     }
 
+    /**
+     *
+     * @param s
+     * @return Ќовый экземпл€р класса User.
+     */
     @Override
     public User toOutput(String s) {
         String[] lines = s.split(",");
@@ -20,6 +31,12 @@ public class UserMapper implements Mapper<User, String> {
         throw new NumberFormatException("Id must be a large number");
     }
 
+    /**
+     *
+     * @param s
+     * @return –езультат преобразовни€ к типу Long ( true or false) .
+     * @throws NumberFormatException
+     */
     private boolean isDigit(String s) throws NumberFormatException {
         try {
             Long.parseLong(s);

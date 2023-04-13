@@ -18,6 +18,10 @@ public class FileOperation implements Operation<String> {
         }
     }
 
+    /**
+     * Метод для считывания из файла
+     * @return Возвращет список строк из файла
+     */
     @Override
     public List<String> readAll() {
         List<String> lines = new ArrayList<>();
@@ -33,7 +37,6 @@ public class FileOperation implements Operation<String> {
                 lines.add(line);
             }
             while (line != null) {
-                // считываем остальные строки в цикле
                 line = reader.readLine();
                 if (line != null) {
                     lines.add(line);
@@ -46,16 +49,20 @@ public class FileOperation implements Operation<String> {
         return lines;
     }
 
+    /**
+     * Метод записи в файл.
+     * @param data
+     */
     @Override
     public void saveAll(List<String> data) {
         try (FileWriter writer = new FileWriter(fileName, false)) {
             for (String line : data) {
                 // запись всей строки
-                writer.write(line);
+                writer.write(line); // Метод записывает элемент в поток вывода
                 // запись по символам
                 writer.append('\n');
             }
-            writer.flush();
+            writer.flush(); // Очистка write
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

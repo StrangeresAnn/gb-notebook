@@ -1,20 +1,27 @@
 package notebook.controller;
 
+import notebook.log.Logger;
 import notebook.model.User;
 import notebook.model.repository.GBRepository;
 
 import java.util.List;
 import java.util.Objects;
 
+
 public class UserController {
     private final GBRepository<User, Long> repository;
+    private Logger logger;
 
-    public UserController(GBRepository<User, Long> repository) {
+    public UserController(GBRepository<User, Long> repository, Logger logger) {
         this.repository = repository;
+        this.logger = logger;
     }
 
     public void saveUser(User user) {
         repository.create(user);
+        logger.log("Создал нового пользователя: " +
+                user.getId() + " " + user.getFirstName() + " " +
+                user.getLastName() + " " + user.getPhone());
     }
 
     public User readUser(Long userId) throws Exception {
@@ -34,12 +41,23 @@ public class UserController {
         return repository.findAll();
     }
 
-    public void updateUser(String userId, User update) {
-        update.setId(Long.parseLong(userId));
-        repository.update(Long.parseLong(userId), update);
+    public boolean updateUser(Long id, User update) {
+        try {
+            repository.update(id, update);
+            logger.log("Обновлённый пользователь: " + update.getFirstName() + " " +
+                    update.getLastName() + " " + update.getPhone());
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void deteleUser(String userId) {
-        repository.delete(Long.parseLong(userId));
+    public boolean deteleUser(Long id) {
+        try {
+            logger.log("Удалил пользователя с id: " + id);
+            return repository.delete(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

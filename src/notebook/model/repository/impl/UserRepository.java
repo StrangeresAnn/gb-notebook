@@ -18,12 +18,16 @@ public class UserRepository implements GBRepository<User, Long> {
         this.operation = operation;
     }
 
+    /**
+     *
+     * @return Список users
+     */
     @Override
-    public List<User> findAll() {
-        List<String> lines = operation.readAll();
-        List<User> users = new ArrayList<>();
-        for (String line : lines) {
-            users.add(mapper.toOutput(line));
+    public List<User> findAll() { // Метод
+        List<String> lines = operation.readAll(); // Запись считанных строк с консоли в список
+        List<User> users = new ArrayList<>(); // Инициализация нового списка Array
+        for (String line : lines) { // Цикл. Проходимся по списку
+            users.add(mapper.toOutput(line)); // Добавляем каждый элемент в список users
         }
         return users;
     }
@@ -31,7 +35,7 @@ public class UserRepository implements GBRepository<User, Long> {
     @Override
     public User create(User user) {
         List<User> users = findAll();
-        long max = 0L;
+        long max = 0L; // ????
         for (User u : users) {
             long id = u.getId();
             if (max < id){
@@ -55,11 +59,19 @@ public class UserRepository implements GBRepository<User, Long> {
         return Optional.empty();
     }
 
+    /**
+     * Метод записи в файл всех экземпляров класса user
+     * @param userId
+     * @param update
+     * @return
+     */
     @Override
     public Optional<User> update(Long userId, User update) {
         try {
             List<User> users = findAll();
-            User updateUser = users.stream().filter(u -> u.getId().equals(userId)).findFirst().get();
+            User updateUser = users.stream().filter(u -> {
+                return u.getId().equals(userId);
+            }).findFirst().get();
             updateUser.setFirstName(update.getFirstName());
             updateUser.setLastName(update.getLastName());
             updateUser.setPhone(update.getPhone());
@@ -76,20 +88,19 @@ public class UserRepository implements GBRepository<User, Long> {
 
     @Override
     public boolean delete(Long id) {
-        long idForDelete = findAll()
-                .stream()
-                .filter(user -> user.getId() == id)
-                .findFirst()
-                .get().getId();
-
-        List<String> list = new ArrayList<>();
-        for (User user : findAll()) {
-            if (user.getId().equals(idForDelete)) continue;
-            list.add(mapper.toInput(user));
+        try {
+            List<User> users = findAll();
+            User removeUser = users.stream().filter(u -> u.getId().equals(id)).findFirst().get();
+            users.remove(removeUser);
+            List<String> list = new ArrayList<>();
+            for (User user : users) {
+                list.add(mapper.toInput(user));
+            }
+            operation.saveAll(list);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        operation.saveAll(list);
-        System.out.println(idForDelete);
-        return true;
     }
 
 }
